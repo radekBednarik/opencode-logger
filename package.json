@@ -3,6 +3,14 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"version": "0.1.0",
+	"repository": {
+		"url": "https://github.com/radekBednarik/opencode-logger.git"
+	},
+	"author": {
+		"url": "https://radekbednarik.com",
+		"name": "Radek Bednarik",
+		"email": "bednarik.radek+opencode-logger@gmail.com"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.11",
 		"@types/bun": "latest",

@@ -1,0 +1,11 @@
+manual-test-npm
+tests-e2e
+__tests__
+node_modules
+logs
+.husky
+.gitignore
+AGENTS.md
+bun.lock
+src
+

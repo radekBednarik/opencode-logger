@@ -6,7 +6,7 @@ export const LOG_DIRECTORY = "logs/opencode";
 /**
  * Filename for the log file.
  */
-export const LOG_FILENAME = "events.jsonl";
+export const LOG_FILENAME = "log.jsonl";
 
 /**
  * List of event types supported by the logger plugin.

@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
-import { LOG_DIRECTORY, LOG_FILENAME } from "../constants.js";
-import { FileLogger } from "../file-logger.js";
+import { LOG_DIRECTORY, LOG_FILENAME } from "../src/constants.js";
+import { FileLogger } from "../src/file-logger.js";
 
 const TEST_ROOT = process.cwd(); // In test environment, this will use CWD
 const LOG_DIR_PATH = join(TEST_ROOT, LOG_DIRECTORY);

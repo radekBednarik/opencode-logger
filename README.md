@@ -1,15 +1,27 @@
 # opencode-logger
 
-To install dependencies:
+This small package is intended to be used as [Opencode](https://opencode.ai) plugin.
+
+See [plugins documentation](https://opencode.ai/docs/plugins/).
+
+This plugin handles logging of all supported [events](https://opencode.ai/docs/plugins/#events).
+
+Events are logged as [jsonl](https://jsonlines.org/) to the
 
 ```bash
-bun install
+<project-root>/logs/opencode/log.jsonl
 ```
 
-To run:
+## Usage
 
-```bash
-bun run index.ts
+In your project open (or set) your `opencode.json` or `opencode.jsonc` file
+and add:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["opencode-logger"]
+}
 ```
 
-This project was created using `bun init` in bun v1.3.6. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+

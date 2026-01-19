@@ -2,6 +2,13 @@ import type { Plugin, Hooks } from "@opencode-ai/plugin";
 import { SUPPORTED_EVENTS, type SupportedEvent } from "./constants.js";
 import { FileLogger } from "./file-logger.js";
 
+/**
+ * The main Opencode Logger plugin entry point.
+ * Initializes the file logger and registers hooks for supported events.
+ *
+ * @param ctx - The plugin context provided by Opencode, containing project details.
+ * @returns A promise that resolves to the plugin hooks configuration.
+ */
 export const loggerPlugin: Plugin = async (ctx) => {
 	// ctx.directory is the project root in the context of the running plugin usually,
 	// but let's be safe and check if we need to resolve it.

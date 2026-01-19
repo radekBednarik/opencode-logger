@@ -1,6 +1,17 @@
+/**
+ * Directory where logs will be stored relative to the project root.
+ */
 export const LOG_DIRECTORY = "logs/opencode";
+
+/**
+ * Filename for the log file.
+ */
 export const LOG_FILENAME = "events.jsonl";
 
+/**
+ * List of event types supported by the logger plugin.
+ * These events correspond to various lifecycle hooks and actions within the Opencode environment.
+ */
 export const SUPPORTED_EVENTS = [
 	"command.executed",
 	"file.edited",
@@ -31,4 +42,7 @@ export const SUPPORTED_EVENTS = [
 	"tui.toast.show",
 ] as const;
 
+/**
+ * Type definition derived from the supported events constant.
+ */
 export type SupportedEvent = (typeof SUPPORTED_EVENTS)[number];

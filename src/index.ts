@@ -24,12 +24,6 @@ export const loggerPlugin: Plugin = async (ctx) => {
 				await logger.log(event.type, event);
 			}
 		},
-		"tool.execute.before": async (input, output) => {
-			await logger.log("tool.execute.before", { input, output });
-		},
-		"tool.execute.after": async (input, output) => {
-			await logger.log("tool.execute.after", { input, output });
-		},
 	};
 
 	return hooks;

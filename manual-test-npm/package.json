@@ -1,0 +1,6 @@
+{
+	"name": "manual-test-npm",
+	"dependencies": {
+		"opencode-logger": "link:opencode-logger"
+	}
+}

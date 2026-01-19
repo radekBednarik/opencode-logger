@@ -1,0 +1,4 @@
+{
+	"plugin": ["opencode-logger"],
+	"$schema": "https://opencode.ai/config.json"
+}

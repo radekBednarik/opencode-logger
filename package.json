@@ -1,6 +1,7 @@
 {
 	"name": "opencode-logger",
-	"module": "index.ts",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"devDependencies": {
 		"@biomejs/biome": "2.3.11",
 		"@types/bun": "latest",
@@ -12,6 +13,7 @@
 	},
 	"private": true,
 	"scripts": {
+		"build-dist": "bunx tsc",
 		"lint": "bunx biome lint --write ./src",
 		"format": "bunx biome format --write",
 		"forlint": "bun lint && bun format",
@@ -19,8 +21,15 @@
 		"prepare": "husky"
 	},
 	"type": "module",
-  "lint-staged": {
-    "*.{js, ts}": ["bun forlint"],
-    "*.{ts,json}": ["bun format"]
-  }
+	"lint-staged": {
+		"*.{js, ts}": [
+			"bun forlint"
+		],
+		"*.{ts,json}": [
+			"bun format"
+		]
+	},
+	"dependencies": {
+		"@opencode-ai/plugin": "^1.1.25"
+	}
 }

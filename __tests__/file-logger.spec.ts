@@ -1,12 +1,15 @@
 import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
-import { LOG_DIRECTORY, LOG_FILENAME } from "../src/constants.js";
+import {
+	DEFAULT_LOG_DIRECTORY,
+	DEFAULT_LOG_FILENAME,
+} from "../src/constants.js";
 import { FileLogger } from "../src/file-logger.js";
 
 const TEST_ROOT = process.cwd(); // In test environment, this will use CWD
-const LOG_DIR_PATH = join(TEST_ROOT, LOG_DIRECTORY);
-const LOG_FILE_PATH = join(LOG_DIR_PATH, LOG_FILENAME);
+const LOG_DIR_PATH = join(TEST_ROOT, DEFAULT_LOG_DIRECTORY);
+const LOG_FILE_PATH = join(LOG_DIR_PATH, DEFAULT_LOG_FILENAME);
 
 describe("FileLogger", () => {
 	beforeAll(() => {
@@ -68,5 +71,36 @@ describe("FileLogger", () => {
 
 		expect(secondLastEntry.eventType).toBe("event.one");
 		expect(lastEntry.eventType).toBe("event.two");
+	});
+
+	describe("Environment Variable Overrides", () => {
+		const customDir = "custom_logs";
+		const customFile = "custom.log";
+		const customDirPath = join(TEST_ROOT, customDir);
+
+		afterAll(() => {
+			if (existsSync(customDirPath)) {
+				rmSync(customDirPath, { recursive: true, force: true });
+			}
+			// Cleanup absolute path test if needed (careful with actual absolute paths in tests)
+			// Using a safe temporary absolute path would be better, but for now we'll stick to relative overrides that resolve to absolute.
+			delete process.env["OPENCODE_LOGGER_DIR"];
+			delete process.env["OPENCODE_LOGGER_FILENAME"];
+		});
+
+		it("should use OPENCODE_LOGGER_DIR and OPENCODE_LOGGER_FILENAME when set", async () => {
+			process.env["OPENCODE_LOGGER_DIR"] = customDir;
+			process.env["OPENCODE_LOGGER_FILENAME"] = customFile;
+
+			const logger = new FileLogger(TEST_ROOT);
+			await logger.init();
+
+			const expectedPath = join(customDirPath, customFile);
+			expect(existsSync(customDirPath)).toBe(true);
+			// We haven't logged anything yet, so file might not exist, but dir should.
+			// Let's log something to verify file creation at correct path.
+			await logger.log("custom.event", {});
+			expect(existsSync(expectedPath)).toBe(true);
+		});
 	});
 });

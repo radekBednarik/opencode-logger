@@ -16,7 +16,7 @@ export const loggerPlugin: Plugin = async (ctx) => {
 	const logger = new FileLogger(ctx.directory);
 	await logger.init();
 
-	console.log("Opencode Logger Plugin initialized!");
+	console.log("[Opencode Logger] Plugin initialized!");
 
 	const hooks: Hooks = {
 		event: async ({ event }) => {

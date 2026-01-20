@@ -13,7 +13,7 @@ export const loggerPlugin: Plugin = async (ctx) => {
 	// ctx.directory is the project root in the context of the running plugin usually,
 	// but let's be safe and check if we need to resolve it.
 	// Based on the docs: directory: The current working directory.
-	const logger = new FileLogger(ctx.directory);
+	const logger = new FileLogger(ctx.directory, ctx);
 	await logger.init();
 
 	console.log("[Opencode Logger] Plugin initialized!");

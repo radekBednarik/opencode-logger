@@ -1,5 +1,6 @@
 import { appendFile, mkdir } from "node:fs/promises";
 import { isAbsolute, join, resolve } from "node:path";
+import type { PluginInput } from "@opencode-ai/plugin";
 import { DEFAULT_LOG_DIRECTORY, DEFAULT_LOG_FILENAME } from "./constants.js";
 
 /**
@@ -19,16 +20,19 @@ export interface LogEntry {
  */
 export class FileLogger {
 	private logFilePath: string;
+	private pluginInput: PluginInput;
 
 	/**
 	 * Creates a new instance of FileLogger.
 	 * @param projectRoot - The absolute path to the root of the project.
+	 * @param pluginInput - Opencode plugin input
 	 */
-	constructor(projectRoot: string) {
+	constructor(projectRoot: string, pluginInput: PluginInput) {
 		const logDir = this.resolveLogDirectory(projectRoot);
 		const logFilename = this.getLogFilename();
 
 		this.logFilePath = join(logDir, logFilename);
+		this.pluginInput = pluginInput;
 	}
 
 	private resolveLogDirectory(projectRoot: string): string {
@@ -50,16 +54,31 @@ export class FileLogger {
 
 	/**
 	 * Initializes the logger by ensuring the log directory exists.
-	 * This method should be called before attempting to log any events.
+	 * This method must be called before attempting to log any events.
 	 */
 	async init() {
 		try {
 			const dirPath = join(this.logFilePath, "..");
 			await mkdir(dirPath, { recursive: true });
+
+			await this.pluginInput.client.app.log({
+				body: {
+					service: "opencode-logger",
+					level: "info",
+					message: "Plugin initialized!",
+				},
+			});
 		} catch (error) {
-			console.error(
-				`[Opencode Logger] Failed to create log directory: ${error}`,
-			);
+			await this.pluginInput.client.app.log({
+				body: {
+					service: "opencode-logger",
+					level: "error",
+					message: "Failed to create log directory.",
+					extra: {
+						error,
+					},
+				},
+			});
 		}
 	}
 
@@ -80,7 +99,16 @@ export class FileLogger {
 		try {
 			await appendFile(this.logFilePath, line, "utf-8");
 		} catch (error) {
-			console.error(`[Opencode Logger] Failed to write to log file: ${error}`);
+			await this.pluginInput.client.app.log({
+				body: {
+					service: "opencode-logger",
+					level: "error",
+					message: "Failed to write to log file.",
+					extra: {
+						error,
+					},
+				},
+			});
 		}
 	}
 }

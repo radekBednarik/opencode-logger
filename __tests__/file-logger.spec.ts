@@ -1,6 +1,7 @@
-import { afterAll, beforeAll, describe, expect, it } from "bun:test";
+import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
+import type { PluginInput } from "@opencode-ai/plugin";
 import {
 	DEFAULT_LOG_DIRECTORY,
 	DEFAULT_LOG_FILENAME,
@@ -10,6 +11,14 @@ import { FileLogger } from "../src/file-logger.js";
 const TEST_ROOT = process.cwd(); // In test environment, this will use CWD
 const LOG_DIR_PATH = join(TEST_ROOT, DEFAULT_LOG_DIRECTORY);
 const LOG_FILE_PATH = join(LOG_DIR_PATH, DEFAULT_LOG_FILENAME);
+
+const mockPluginInput = {
+	client: {
+		app: {
+			log: mock(() => Promise.resolve()),
+		},
+	},
+} as unknown as PluginInput;
 
 describe("FileLogger", () => {
 	beforeAll(() => {
@@ -27,14 +36,14 @@ describe("FileLogger", () => {
 	});
 
 	it("should initialize and create the log directory", async () => {
-		const logger = new FileLogger(TEST_ROOT);
+		const logger = new FileLogger(TEST_ROOT, mockPluginInput);
 		await logger.init();
 
 		expect(existsSync(LOG_DIR_PATH)).toBe(true);
 	});
 
 	it("should log events to the file in JSONL format", async () => {
-		const logger = new FileLogger(TEST_ROOT);
+		const logger = new FileLogger(TEST_ROOT, mockPluginInput);
 		await logger.init();
 
 		const testEvent = "test.event";
@@ -55,7 +64,7 @@ describe("FileLogger", () => {
 	});
 
 	it("should append multiple logs correctly", async () => {
-		const logger = new FileLogger(TEST_ROOT);
+		const logger = new FileLogger(TEST_ROOT, mockPluginInput);
 		await logger.init();
 
 		await logger.log("event.one", { id: 1 });
@@ -92,7 +101,7 @@ describe("FileLogger", () => {
 			process.env["OPENCODE_LOGGER_DIR"] = customDir;
 			process.env["OPENCODE_LOGGER_FILENAME"] = customFile;
 
-			const logger = new FileLogger(TEST_ROOT);
+			const logger = new FileLogger(TEST_ROOT, mockPluginInput);
 			await logger.init();
 
 			const expectedPath = join(customDirPath, customFile);

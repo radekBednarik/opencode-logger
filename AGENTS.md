@@ -16,12 +16,12 @@ This document provides comprehensive instructions, conventions, and workflows fo
 
 ```text
 .
+├── __tests__/           # Unit tests (centralized per bunfig.toml)
 ├── dist/                # Compiled output (generated)
 ├── src/
-│   ├── __tests__/       # Unit tests (colocated or centralized per bunfig.toml)
 │   ├── index.ts         # Main entry point (Plugin definition)
 │   └── ...              # Other source files
-├── tests-e2e/           # End-to-end tests (independent package context)
+├── manual-test-npm/     # Manual testing harness (consumer simulation)
 ├── bun.lock             # Lockfile (do not edit manually)
 ├── bunfig.toml          # Bun configuration (test roots, etc.)
 ├── package.json         # Manifest, scripts, dependencies
@@ -71,7 +71,7 @@ Always use the defined scripts in `package.json`.
   ```
 - **Run Specific Test File:**
   ```bash
-  bun test src/__tests__/index.spec.ts
+  bun test __tests__/index.spec.ts
   ```
 - **Filter Tests by Name:**
   ```bash
@@ -110,12 +110,12 @@ Always use the defined scripts in `package.json`.
 
 ## 5. Testing Guidelines
 
-### Unit Tests (`src/__tests__`)
+### Unit Tests (`__tests__/`)
 - **Framework:** Bun Test (compatible with Jest/Vitest API).
 - **Structure:**
   ```typescript
   import { describe, it, expect } from "bun:test";
-  import { loggerPlugin } from "../index.js";
+  import { loggerPlugin } from "../src/index.js";
 
   describe("loggerPlugin", () => {
     it("should initialize correctly", async () => {
@@ -126,10 +126,10 @@ Always use the defined scripts in `package.json`.
   ```
 - **Mocking:** Use `mock()` from `bun:test` if external dependencies need mocking.
 
-### E2E Tests (`tests-e2e/`)
-- This directory is a separate workspace/package.
-- It is used to simulate the plugin running in a real environment.
-- Run `cd tests-e2e && bun install` to set up dependencies specifically for E2E.
+### Manual Tests (`manual-test-npm/`)
+- This directory is used for manual testing.
+- It simulates a consumer installing the package.
+- It uses `link:` protocol to symlink the local package.
 
 ## 6. Git Workflow & Hooks
 

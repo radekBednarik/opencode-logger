@@ -25,22 +25,27 @@ export class FileLogger {
 	 * @param projectRoot - The absolute path to the root of the project.
 	 */
 	constructor(projectRoot: string) {
+		const logDir = this.resolveLogDirectory(projectRoot);
+		const logFilename = this.getLogFilename();
+
+		this.logFilePath = join(logDir, logFilename);
+	}
+
+	private resolveLogDirectory(projectRoot: string): string {
 		const logDir =
 			// biome-ignore lint/complexity/useLiteralKeys: process.env access
 			process.env["OPENCODE_LOGGER_DIR"] ||
 			join(projectRoot, DEFAULT_LOG_DIRECTORY);
-		const logFilename =
-			// biome-ignore lint/complexity/useLiteralKeys: process.env access
-			process.env["OPENCODE_LOGGER_FILENAME"] || DEFAULT_LOG_FILENAME;
 
 		// If logDir is absolute, use it directly. Otherwise, resolve it relative to projectRoot
 		// Note: The default join(projectRoot, DEFAULT_LOG_DIRECTORY) above already handles the relative default case,
 		// but we check isAbsolute here specifically for the ENV var case if the user passed a relative path.
-		const resolvedLogDir = isAbsolute(logDir)
-			? logDir
-			: resolve(projectRoot, logDir);
+		return isAbsolute(logDir) ? logDir : resolve(projectRoot, logDir);
+	}
 
-		this.logFilePath = join(resolvedLogDir, logFilename);
+	private getLogFilename(): string {
+		// biome-ignore lint/complexity/useLiteralKeys: process.env access
+		return process.env["OPENCODE_LOGGER_FILENAME"] || DEFAULT_LOG_FILENAME;
 	}
 
 	/**

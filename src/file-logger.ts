@@ -61,13 +61,17 @@ export class FileLogger {
 			const dirPath = join(this.logFilePath, "..");
 			await mkdir(dirPath, { recursive: true });
 
-			await this.pluginInput.client.app.log({
+			// NOTE: this opencode log call causes
+			// the application to hang on start.
+			// Did not see anything in the internal logs,
+			// so this is disabled for the moment
+			/* await this.pluginInput.client.app.log({
 				body: {
 					service: "opencode-logger",
 					level: "info",
 					message: "Plugin initialized!",
 				},
-			});
+			}); */
 		} catch (error) {
 			await this.pluginInput.client.app.log({
 				body: {

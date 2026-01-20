@@ -11,6 +11,13 @@
 		"name": "Radek Bednarik",
 		"email": "bednarik.radek+opencode-logger@gmail.com"
 	},
+	"keywords": [
+		"AI",
+		"Opencode",
+		"logger",
+		"Typescript",
+		"plugin"
+	],
 	"devDependencies": {
 		"@biomejs/biome": "2.3.11",
 		"@types/bun": "latest",

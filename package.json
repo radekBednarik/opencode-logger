@@ -4,7 +4,7 @@
 	"types": "dist/index.d.ts",
 	"version": "0.3.0",
 	"repository": {
-		"url": "https://github.com/radekBednarik/opencode-logger.git"
+		"url": "git+https://github.com/radekBednarik/opencode-logger.git"
 	},
 	"author": {
 		"url": "https://radekbednarik.com",

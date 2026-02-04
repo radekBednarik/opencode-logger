@@ -26,12 +26,13 @@ and add:
 
 ## Configuration
 
-You can customize the log directory and filename using environment variables.
+You can customize the log directory, filename, and logging scope using environment variables.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `OPENCODE_LOGGER_DIR` | The directory where logs are stored. Can be absolute or relative to project root. | `logs/opencode` |
 | `OPENCODE_LOGGER_FILENAME` | The filename for the log file. | `log.jsonl` |
+| `OPENCODE_LOGGER_SCOPE` | Comma-separated list of event types to log. Supports wildcards (e.g., `session.*`). | `*` (Log all events) |
 
 
 
@@ -51,6 +52,22 @@ Or export them, for example in your `~/.bashrc`
 export OPENCODE_LOGGER_DIR=/tmp/my-logs
 export OPENCODE_LOGGER_FILENAME=custom-name.jsonl
 ```
+
+### Logging Scope
+
+You can filter which events are logged using the `OPENCODE_LOGGER_SCOPE` environment variable.
+It accepts a comma-separated string of event types or patterns.
+
+- `*` (Default): Logs all events.
+- `session.*`: Logs all events starting with `session.` (e.g., `session.created`, `session.updated`).
+- `command.executed,file.edited`: Logs only these specific events.
+
+**Example:**
+
+```bash
+export OPENCODE_LOGGER_SCOPE="session.*,command.executed"
+```
+
 
 
 

@@ -19,7 +19,7 @@
 		"plugin"
 	],
 	"dependencies": {
-		"@opencode-ai/plugin": "^1.1.25"
+		"@opencode-ai/plugin": "^1.1.51"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.11",
@@ -28,7 +28,7 @@
 		"lint-staged": "^16.2.7"
 	},
 	"peerDependencies": {
-		"typescript": "^5"
+		"typescript": "^5.9.3"
 	},
 	"private": false,
 	"scripts": {

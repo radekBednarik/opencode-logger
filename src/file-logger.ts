@@ -37,7 +37,6 @@ export class FileLogger {
 
 	private resolveLogDirectory(projectRoot: string): string {
 		const logDir =
-			// biome-ignore lint/complexity/useLiteralKeys: process.env access
 			process.env["OPENCODE_LOGGER_DIR"] ||
 			join(projectRoot, DEFAULT_LOG_DIRECTORY);
 
@@ -48,7 +47,6 @@ export class FileLogger {
 	}
 
 	private getLogFilename(): string {
-		// biome-ignore lint/complexity/useLiteralKeys: process.env access
 		return process.env["OPENCODE_LOGGER_FILENAME"] || DEFAULT_LOG_FILENAME;
 	}
 

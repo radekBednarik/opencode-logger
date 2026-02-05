@@ -20,7 +20,6 @@ export const loggerPlugin: Plugin = async (ctx) => {
 		event: async ({ event }) => {
 			if (
 				SUPPORTED_EVENTS.includes(event.type as SupportedEvent) &&
-				// biome-ignore lint/complexity/useLiteralKeys: process.env access
 				shouldLogEvent(event.type, process.env["OPENCODE_LOGGER_SCOPE"])
 			) {
 				await logger.log(event.type, event);

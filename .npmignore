@@ -7,5 +7,7 @@ logs
 .gitignore
 AGENTS.md
 bun.lock
+.opencode
+biome.json
 src
 

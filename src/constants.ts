@@ -34,6 +34,7 @@ export const SUPPORTED_EVENTS = [
 	"session.idle",
 	"session.status",
 	"session.updated",
+	"shell.env",
 	"todo.updated",
 	"tool.execute.after",
 	"tool.execute.before",

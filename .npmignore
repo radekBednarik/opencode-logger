@@ -10,4 +10,5 @@ bun.lock
 .opencode
 biome.json
 src
+.github
 

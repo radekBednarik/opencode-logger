@@ -20,7 +20,7 @@ and add:
 ```jsonc
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["opencode-logger"]
+  "plugin": ["opencode-logger"],
 }
 ```
 
@@ -28,13 +28,13 @@ and add:
 
 You can customize the log directory, filename, and logging scope using environment variables.
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `OPENCODE_LOGGER_DIR` | The directory where logs are stored. Can be absolute or relative to project root. | `logs/opencode` |
-| `OPENCODE_LOGGER_FILENAME` | The filename for the log file. | `log.jsonl` |
-| `OPENCODE_LOGGER_SCOPE` | Comma-separated list of event types to log. Supports wildcards (e.g., `session.*`). | `*` (Log all events) |
-
-
+| Variable                        | Description                                                                               | Default              |
+| ------------------------------- | ----------------------------------------------------------------------------------------- | -------------------- |
+| `OPENCODE_LOGGER_DIR`           | The directory where logs are stored. Can be absolute or relative to project root.         | `logs/opencode`      |
+| `OPENCODE_LOGGER_FILENAME`      | The filename for the log file.                                                            | `log.jsonl`          |
+| `OPENCODE_LOGGER_SCOPE`         | Comma-separated list of event types to log. Supports wildcards (e.g., `session.*`).       | `*` (Log all events) |
+| `OPENCODE_LOGGER_MAX_FILE_SIZE` | Maximum log file size in bytes before automatic rotation. Set to `0` to disable rotation. | `104857600` (100 MB) |
+| `OPENCODE_LOGGER_MAX_FILES`     | Maximum number of rotated log files to keep. Set to `0` to keep all.                      | `0` (unlimited)      |
 
 ### Setting via CLI
 
@@ -68,6 +68,17 @@ It accepts a comma-separated string of event types or patterns.
 export OPENCODE_LOGGER_SCOPE="session.*,command.executed"
 ```
 
+### Log Rotation
 
+You can control when log files are rotated and how many archived files are retained.
 
+- `OPENCODE_LOGGER_MAX_FILE_SIZE`: Once the active log file reaches this size (in bytes), it is rotated. Set to `0` to disable rotation entirely.
+- `OPENCODE_LOGGER_MAX_FILES`: After rotation, only this many archived files are kept (oldest deleted first). Set to `0` to keep all rotated files indefinitely.
 
+**Example:**
+
+```bash
+# Rotate at 10 MB, keep last 5 archived files
+export OPENCODE_LOGGER_MAX_FILE_SIZE=10485760
+export OPENCODE_LOGGER_MAX_FILES=5
+```

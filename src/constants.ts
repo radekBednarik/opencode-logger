@@ -9,6 +9,19 @@ export const DEFAULT_LOG_DIRECTORY = "logs/opencode";
 export const DEFAULT_LOG_FILENAME = "log.jsonl";
 
 /**
+ * Default maximum log file size in bytes before rotation occurs (100 MB).
+ * Set OPENCODE_LOGGER_MAX_FILE_SIZE to override. Set to 0 to disable rotation.
+ */
+export const DEFAULT_MAX_FILE_SIZE = 104857600;
+
+/**
+ * Default maximum number of rotated log files to retain.
+ * 0 means unlimited — all rotated files are kept.
+ * Set OPENCODE_LOGGER_MAX_FILES to override.
+ */
+export const DEFAULT_MAX_FILES = 0;
+
+/**
  * List of event types supported by the logger plugin.
  * These events correspond to various lifecycle hooks and actions within the Opencode environment.
  */

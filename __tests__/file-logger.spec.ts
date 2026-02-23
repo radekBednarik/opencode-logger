@@ -271,6 +271,53 @@ describe("FileLogger", () => {
 			await expect(logger.log("first.event", {})).resolves.toBeUndefined();
 		});
 
+		describe("Concurrency safety", () => {
+			it("should not double-rotate or lose entries when log() is called concurrently", async () => {
+				const dir = join(ROTATION_DIR, "rotate-concurrent");
+				process.env["OPENCODE_LOGGER_DIR"] = dir;
+				// Tiny limit so every non-empty file triggers rotation on the next write
+				process.env["OPENCODE_LOGGER_MAX_FILE_SIZE"] = "1";
+				// Keep all rotated files so we can count them exactly
+				process.env["OPENCODE_LOGGER_MAX_FILES"] = "0";
+
+				const logger = new FileLogger(TEST_ROOT, mockPluginInput);
+				await logger.init();
+
+				const N = 8;
+				// Fire all log() calls simultaneously — without the mutex this would
+				// cause multiple callers to pass the size check and race on rename().
+				await Promise.all(
+					Array.from({ length: N }, (_, i) =>
+						logger.log("concurrent.event", { seq: i }),
+					),
+				);
+
+				const files = await readdir(dir);
+				const rotatedFiles = files.filter((f) => f !== DEFAULT_LOG_FILENAME);
+
+				// Collect every log entry across all files
+				const allEntries: { eventType: string; payload: { seq: number } }[] =
+					[];
+				for (const filename of files) {
+					const content = readFileSync(join(dir, filename), "utf-8");
+					for (const line of content.trim().split("\n")) {
+						if (line) allEntries.push(JSON.parse(line));
+					}
+				}
+
+				// Every entry must be present exactly once — no loss, no duplication
+				expect(allEntries.length).toBe(N);
+				const seqs = allEntries.map((e) => e.payload.seq).sort((a, b) => a - b);
+				expect(seqs).toEqual(Array.from({ length: N }, (_, i) => i));
+
+				// With N=8 writes and a 1-byte limit the first write creates the file;
+				// each subsequent write rotates, giving N-1 = 7 rotated archives.
+				// The mutex guarantees exactly one rotation per oversized file —
+				// no two callers should ever race-rename the same file.
+				expect(rotatedFiles.length).toBe(N - 1);
+			});
+		});
+
 		describe("OPENCODE_LOGGER_MAX_FILES pruning", () => {
 			it("should prune oldest rotated files when maxFiles limit is exceeded", async () => {
 				const dir = join(ROTATION_DIR, "rotate-prune");

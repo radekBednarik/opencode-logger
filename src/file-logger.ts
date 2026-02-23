@@ -38,6 +38,8 @@ export class FileLogger {
 	private maxFileSize: number;
 	private maxFiles: number;
 	private pluginInput: PluginInput;
+	/** Mutex: each log() call chains onto this promise, serialising all writes. */
+	private _lock: Promise<void> = Promise.resolve();
 
 	/**
 	 * Creates a new instance of FileLogger.
@@ -96,10 +98,22 @@ export class FileLogger {
 	/**
 	 * Logs an event and its payload to the log file in JSONL format.
 	 * Automatically rotates the file if the configured maximum size has been reached.
+	 *
+	 * Concurrent calls are serialised via an async mutex so that the
+	 * check-and-rotate step is never interleaved between two callers.
+	 *
 	 * @param eventType - The type of event to log.
 	 * @param payload - The data associated with the event.
 	 */
-	async log(eventType: string, payload: unknown) {
+	async log(eventType: string, payload: unknown): Promise<void> {
+		// Chain this write onto the tail of the lock so all log() calls execute
+		// sequentially, regardless of how many are in-flight at once.
+		this._lock = this._lock.then(() => this._doLog(eventType, payload));
+		return this._lock;
+	}
+
+	/** Performs the actual write; always called serially through the mutex. */
+	private async _doLog(eventType: string, payload: unknown): Promise<void> {
 		const entry: LogEntry = {
 			timestamp: new Date().toISOString(),
 			eventType,

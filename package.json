@@ -33,6 +33,7 @@
 	},
 	"private": false,
 	"scripts": {
+		"test": "bun test",
 		"build-dist": "bunx tsc",
 		"lint": "bunx biome lint --write ./src",
 		"format": "bunx biome format --write",
@@ -42,7 +43,7 @@
 	},
 	"type": "module",
 	"lint-staged": {
-		"*.{js, ts}": [
+		"*.{js,ts}": [
 			"bun forlint"
 		],
 		"*.{ts,json}": [

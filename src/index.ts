@@ -1,5 +1,4 @@
 import type { Hooks, Plugin } from "@opencode-ai/plugin";
-import { SUPPORTED_EVENTS, type SupportedEvent } from "./constants.js";
 import { FileLogger } from "./file-logger.js";
 import { shouldLogEvent } from "./utils.js";
 
@@ -18,10 +17,7 @@ export const loggerPlugin: Plugin = async (ctx) => {
 
 	const hooks: Hooks = {
 		event: async ({ event }) => {
-			if (
-				SUPPORTED_EVENTS.includes(event.type as SupportedEvent) &&
-				shouldLogEvent(event.type, process.env["OPENCODE_LOGGER_SCOPE"])
-			) {
+			if (shouldLogEvent(event.type, process.env["OPENCODE_LOGGER_SCOPE"])) {
 				await logger.log(event.type, event);
 			}
 		},

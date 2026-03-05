@@ -20,7 +20,7 @@
 		"plugin"
 	],
 	"dependencies": {
-		"@opencode-ai/plugin": "^1.2.16"
+		"@opencode-ai/plugin": "^1.2.18"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.5",

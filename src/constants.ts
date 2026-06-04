@@ -29,6 +29,7 @@ export const SUPPORTED_EVENTS = [
 	// Command Events
 	"command.executed",
 	// Experimental Events
+	// Note: Not found in official docs as of 2026-06-04 - verify before removal.
 	"experimental.session.compacting",
 	// File Events
 	"file.edited",
